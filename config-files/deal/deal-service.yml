@@ -13,30 +13,6 @@ spring:
     password: ${DB_PASSWORD:deal}
     url: ${DB_URL:jdbc:postgresql://localhost:5432/deal_db}
     driver-class-name: org.postgresql.Driver
-#  rabbitmq:
-#    host: 127.0.0.1
-#    port: 5672
-#    username: user
-#    password: user
-#  cloud:
-#    stream:
-#      rabbit:
-#        default:
-#          producer:
-#            bindQueue: false
-#            autoBindDlq: false
-#            declareExchange: false
-#            queueNameGroupOnly: true
-#            exchangeType: fanout
-#        bindings:
-#          dealEvents-out-0:
-#            producer:
-#              routing-key-expression: headers.routingKey
-#              exchange-type: direct
-#
-#      bindings:
-#        dealEvents-out-0:
-#          destination: ex.deal
 
   jpa:
     databasePlatform: org.hibernate.dialect.PostgreSQL9Dialect
