@@ -21,14 +21,14 @@ logging:
       springframework:
         web: info
 #!!!!!!!!!!!!!!!!!!!!!!!
-server:
-  port: ${APP_PORT:8082}
-  servlet:
-    context-path: "/api-gateway/deal-service"
-
-openapi:
-  title: deal-mcs
-  description: Документация deal-mcs API
+#server:
+#  port: ${APP_PORT:8082}
+#  servlet:
+#    context-path: "/api-gateway/deal-service"
+#
+#openapi:
+#  title: deal-mcs
+#  description: Документация deal-mcs API
 #!!!!!!!!!!!!!!!!!!!!!!
 
 keycloak:
