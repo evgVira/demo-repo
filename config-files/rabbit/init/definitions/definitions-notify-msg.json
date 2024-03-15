@@ -1,0 +1,84 @@
+{
+  "exchanges": [
+    {
+      "name": "ex.notify-auth-msg",
+      "vhost": "/",
+      "type": "fanout",
+      "durable": true,
+      "auto_delete": false,
+      "internal": false,
+      "arguments": {}
+    },
+    {
+      "name": "dlex.notify-auth-msg",
+      "vhost": "/",
+      "type": "x-delayed-message",
+      "durable": true,
+      "auto_delete": false,
+      "internal": false,
+      "arguments": {
+        "x-delayed-type": "fanout"
+      }
+    },
+    {
+      "name": "plex.notify-auth-msg",
+      "vhost": "/",
+      "type": "fanout",
+      "durable": true,
+      "auto_delete": false,
+      "internal": false,
+      "arguments": {}
+    }
+  ],
+
+
+
+  "queues": [
+    {
+      "name": "q.notify-auth-msg",
+      "vhost": "/",
+      "durable": true,
+      "auto_delete": false
+    },
+
+    {
+      "name": "dlq.notify-auth-msg",
+      "vhost": "/",
+      "durable": true,
+      "auto_delete": false
+    },
+    {
+      "name": "plq.notify-auth-msg",
+      "vhost": "/",
+      "durable": true,
+      "auto_delete": false
+    }
+  ],
+
+
+
+  "bindings": [
+    {
+      "source": "ex.notify-auth-msg",
+      "vhost": "/",
+      "destination": "q.notify-auth-msg",
+      "destination_type": "queue",
+      "arguments": {}
+    },
+
+    {
+      "source": "dlex.notify-auth-msg",
+      "vhost": "/",
+      "destination": "dlq.notify-auth-msg",
+      "destination_type": "queue",
+      "arguments": {}
+    },
+    {
+      "source": "plex.notify-auth-msg",
+      "vhost": "/",
+      "destination": "plq.notify-auth-msg",
+      "destination_type": "queue",
+      "arguments": {}
+    }
+  ]
+}

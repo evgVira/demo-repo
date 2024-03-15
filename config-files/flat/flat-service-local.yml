@@ -1,0 +1,42 @@
+server:
+  port: ${APP_PORT:8083}
+  servlet:
+    context-path: "/flat-service"
+
+openapi:
+  title: flat-mcs
+  description: Документация flat-mcs API
+
+application:
+  file-box-api:
+    base-url: http://localhost:8083
+
+spring:
+  datasource:
+    username: ${DB_USER:flat}
+    password: ${DB_PASSWORD:flat}
+    url: ${DB_URL:jdbc:postgresql://127.0.0.79:5432/flat_db}
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    databasePlatform: org.hibernate.dialect.PostgreSQLDialect
+    show-sql: true
+    hibernate:
+      ddl-auto: validate
+  flyway:
+    baseline-on-migrate: true
+    baseline-version: 0
+    default-schema: public
+
+    logging:
+      level:
+        root: INFO
+      pattern:
+        console: "[%d{yyyy-MM-dd HH:mm:ss.SSS}] [%-5level] [%logger{36}] - %msg%n"
+
+keycloak:
+  realm: users-realm
+  credentials:
+    secret: H3K4dp1v9kLf0NcAkeBYUwFJMoTHVSrb
+  resource: flat-service
+  url:
+    token-url: http://localhost:8085/realms/users-realm/protocol/openid-connect/token

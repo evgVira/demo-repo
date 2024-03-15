@@ -1,0 +1,60 @@
+server:
+  port: ${APP_PORT:8080}
+  servlet:
+    context-path: "/api-gateway/file-box"
+openapi:
+  title: file-box-mcs
+  description: Документация file-box-mcs API
+
+spring:
+  datasource:
+    username: minio
+    password: minio
+    url: jdbc:postgresql://localhost:5435/minio_db
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    show-sql: true
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+  flyway:
+    enabled: true
+    baseline-on-migrate: true
+    user: minio
+    password: minio
+    url: jdbc:postgresql://localhost:5435/minio_db
+    locations: classpath:db/migration
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: https://flat-renta.test.madela.dev/auth/realms/users-realm
+          jwk-set-uri: https://flat-renta.test.madela.dev/auth/realms/users-realm/protocol/openid-connect/certs
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 10MB
+
+keycloak:
+  credentials:
+    secret: Ardut7TW9onY1TapblJdryrakgHe11Rc
+  resource: file-box-client
+  url:
+    token-url: https://flat-renta.test.madela.dev/auth/realms/users-realm/protocol/openid-connect/token
+
+app:
+  minio:
+    url: ${S3_URL:http://127.0.0.1:9000}
+    buckets:
+      flat-renta:
+        name: ${BUCKET_NAME:flat-sharing}
+        access: ${BUCKET_ACCESS:user}
+        secret: ${BUCKET_SECRET:password}
+
+logging:
+  level:
+    root: debug
+    org.springframework.web.HttpLogging: TRACE
+  pattern:
+    console: "[%d{yyyy-MM-dd HH:mm:ss.SSS}] [%-5level] [%logger{36}] - %msg%n"
+

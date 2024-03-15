@@ -1,0 +1,41 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://127.0.0.1:5439/e_lock
+    username: postgres
+    password: 123
+    driverClassName: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    show-sql: false
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+  flyway:
+    enabled: true
+    baseline-on-migrate: true
+    user: postgres
+    password: 123
+    url: jdbc:postgresql://127.0.0.1:5439/e_lock
+    locations: classpath:db/migration
+
+server:
+  port: ${APP_PORT:8080}
+  servlet:
+    context-path: "/api-gateway/e-lock-service"
+
+application:
+  url:
+    flat:
+      base-url: http://localhost:8081/flat-service
+
+keycloak:
+  credentials:
+    secret: jkmYaKpXpkHC20bR6IHtpvEeqleGLYvV
+  resource: e-lock-service
+  url:
+    token-url: https://flat-renta.test.madela.dev/auth/realms/users-realm/protocol/openid-connect/token
+
+#!!!!!!!!!
+openapi:
+  title: e-lock-mcs
+  description: Документация e-lock-mcs API
+#!!!!!!!!!!

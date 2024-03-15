@@ -1,0 +1,92 @@
+server:
+  port: 8765
+
+spring:
+  application:
+    name: gateway-service
+  main:
+    web-application-type: reactive
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: https://flat-renta.test.madela.dev/auth/realms/users-realm
+          jwk-set-uri: ${spring.security.oauth2.resourceserver.jwt.issuer-uri}/protocol/openid-connect/certs
+  webflux:
+    base-path: /api-gateway
+
+management:
+  endpoint:
+    gateway:
+      enabled: true
+
+routes:
+  users:
+    id: users-service
+    uri: http://localhost:8081/api-gateway/users
+    endpoint: /api-gateway/users/api/v1/**, ${springdoc.swagger-ui.urls[0].url}
+  deals:
+    id: deal-service
+    uri: http://localhost:8082/api-gateway/deal-service
+    endpoint: /api-gateway/deal-service/api/v1/**, ${springdoc.swagger-ui.urls[1].url}
+  flats:
+    id: flat-service
+    uri: http://localhost:8083/api-gateway/flat-service
+    endpoint: /api-gateway/flat-service/api/v1/**, ${springdoc.swagger-ui.urls[2].url}
+  file-box:
+    id: file-box-service
+    uri: http://localhost:8084/api-gateway/file-box
+    endpoint: /api-gateway/file-box/api/v1/**, ${springdoc.swagger-ui.urls[3].url}
+  e-lock:
+    id: e-lock-service
+    uri: http://localhost:8086/api-gateway/e-lock-service
+    endpoint: /api-gateway/e-lock-service/api/v1/**, ${springdoc.swagger-ui.urls[4].url}
+  #  coordinator:
+  #    id: coordinator-service
+  #    uri: http://localhost:8087/coordinator-service
+  #    endpoint: /coordinator-service/api/v1/**, ${springdoc.swagger-ui.urls[5].url}
+  camunda:
+    id: camunda-service
+    uri: http://localhost:8088/api-gateway/camunda
+    endpoint: /api-gateway/camunda/api/v1/**, ${springdoc.swagger-ui.urls[6].url}, /camunda/**
+  chat-hub:
+    id: chat-hub-service
+    uri: http://localhost:8089/api-gateway/chat-hub-service
+    endpoint: /api-gateway/chat-hub-service/api/v1/**, ${springdoc.swagger-ui.urls[7].url}
+
+springdoc:
+  api-docs:
+    path: /v3/api-docs
+  webjars:
+    prefix:
+  swagger-ui:
+    config-url: /api-gateway/v3/api-docs/swagger-config
+    path: /swagger-ui.html
+    url: ${springdoc.api-docs.path}
+    disable-swagger-default-url: true
+    urls:
+      - url: /api-gateway/users/v3/api-docs
+        name: users
+      - url: /api-gateway/deal-service/v3/api-docs
+        name: deal
+      - url: /api-gateway/flat-service/v3/api-docs
+        name: flat
+      - url: /api-gateway/file-box/v3/api-docs
+        name: file-box
+      - url: /api-gateway/e-lock-service/v3/api-docs
+        name: e-lock
+      - url: /api-gateway/coordinator/v3/api-docs
+        name: coordinator
+      - url: /api-gateway/camunda/v3/api-docs
+        name: camunda
+      - url: /api-gateway/chat-hub-service/v3/api-docs
+        name: chat-hub
+logging:
+  level:
+    org.springframework.web.HttpLogging: TRACE
+    reactor.netty.http.server: DEBUG
+    reactor.netty.http.client: DEBUG
+    root: debug
+
+reactor:
+  netty: debug

@@ -1,0 +1,98 @@
+server:
+  port: 8081
+  servlet:
+    context-path: /users
+
+base-url: http://localhost:${server.port}
+
+openapi:
+  title: user-mcs
+  description: Документация user-mcs API
+
+spring:
+  datasource:
+    url: jdbc:postgresql://127.0.0.89:5432/user_db
+    username: user
+    password: 12345
+  rabbitmq:
+    host: 127.0.0.1
+    port: 5672
+    username: user
+    password: user
+  jpa:
+    hibernate:
+      ddl-auto: none
+    show-sql: true
+  flyway:
+    baseline-on-migrate: true
+    baseline-version: 0
+    default-schema: public
+  logging:
+    level:
+      root: INFO
+    pattern:
+      console: "[%d{yyyy-MM-dd HH:mm:ss.SSS}] [%-5level] [%logger{36}] - %msg%n"
+  security:
+    oauth2:
+      client:
+        registration:
+          keycloak:
+            client-id: ${keycloak.resource}
+            client-secret: ${keycloak.credentials.secret}
+            provider: keycloak
+            authorization-grant-type: client_credentials
+            redirect-uri: ${base-url}${server.servlet.context-path}
+            scope: openid
+            client-authentication-method: client_secret_post
+        provider:
+          keycloak:
+            token-uri: ${spring.security.oauth2.resourceserver.jwt.issuer-uri}/protocol/openid-connect/token
+            issuer-uri: ${spring.security.oauth2.resourceserver.jwt.issuer-uri}
+      resourceserver:
+        jwt:
+          issuer-uri: ${keycloak.auth-server-url}realms/${keycloak.realm}
+          jwk-set-uri: ${spring.security.oauth2.resourceserver.jwt.issuer-uri}/protocol/openid-connect/certs
+  cloud:
+    stream:
+      rabbit:
+        default:
+          producer:
+            bindQueue: false
+            autoBindDlq: false
+            declareExchange: false
+            queueNameGroupOnly: true
+            exchangeType: fanout
+
+      bindings:
+        authMessageSupplier-out-0:
+          destination: ex.notify-auth-msg
+
+keycloak:
+  auth-server-url: https://flat-renta.test.madela.dev/auth/
+  realm: users-realm
+  resource: user-client
+  credentials:
+    secret: FA3crvN9YqQOjC8AvohAsm6LxyLxIseJ
+  bearer-only: true
+  ssl-required: external
+  use-resource-role-mappings: true
+  url:
+    token-url: ${spring.security.oauth2.client.provider.keycloak.token-uri}
+    execute-action-url: ${spring.security.oauth2.resourceserver.jwt.issuer-uri}/login-actions/action-token?key=
+    action-token-url: ${spring.security.oauth2.resourceserver.jwt.issuer-uri}/execute-actions?userId=%s&clientId=${keycloak.resource}&actions=%s
+    openid-config: ${spring.security.oauth2.resourceserver.jwt.issuer-uri}/.well-known/openid-configuration
+  enabled: true
+  cors: true
+
+application:
+  url:
+    flat-client:
+      base-url: http://localhost:8083/flat-service/
+
+cron-expression:
+  every-hour: "0 0 * * * *"
+
+logging:
+  level:
+    root: debug
+    org.springframework.web.HttpLogging: TRACE

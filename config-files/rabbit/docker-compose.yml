@@ -1,0 +1,21 @@
+version: "1.0"
+services:
+  rabbit:
+    image: heidiks/rabbitmq-delayed-message-exchange:latest
+    volumes:
+      - ./init/rabbitmq.conf:/etc/rabbitmq/rabbitmq.conf:ro
+      - ./init/definitions/:/etc/rabbitmq/definitions/:ro
+    configs:
+      - source: rabbit_plugins
+        target: /etc/rabbitmq/enabled_plugins
+    ports:
+      - "5552:5552"
+      - "5672:5672"
+      - "15672:15672"
+      - "61613:61613"
+
+configs:
+  rabbit_plugins:
+    content: "[rabbitmq_consistent_hash_exchange,rabbitmq_delayed_message_exchange,rabbitmq_management,
+    rabbitmq_management_agent,rabbitmq_prometheus,rabbitmq_web_dispatch,rabbitmq_stomp,
+    rabbitmq_stream,rabbitmq_stream_management]."

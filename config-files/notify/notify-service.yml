@@ -1,0 +1,101 @@
+server:
+  port: ${APP_PORT:8080}
+  servlet:
+    context-path: "/notify"
+
+spring:
+  datasource:
+    url: jdbc:postgresql://127.0.0.91:5433/notify_db
+    username: user
+    password: 12345
+  rabbitmq:
+    host: 127.0.0.1
+    port: 5672
+    username: user
+    password: user
+    stream:
+      host: 127.0.0.1
+      port: 5552
+      username: user
+      password: user
+  cloud:
+    function:
+      definition: dealCreateConsumer;authMessageConsumer;authMessageDLConsumer;authMessagePLConsumer
+    stream:
+      rabbit:
+        default:
+          consumer:
+            bindQueue: false
+            autoBindDlq: false
+            declareExchange: false
+            queueNameGroupOnly: true
+          producer:
+            bindQueue: false
+            autoBindDlq: false
+            declareExchange: false
+            queueNameGroupOnly: true
+            exchangeType: fanout
+        bindings:
+          dealCreateConsumer-in-0:
+            consumer:
+              container-type: stream
+          notifyMessageDLSupplier-out-0:
+            producer:
+              delayed-exchange: true
+
+      bindings:
+        authMessageConsumer-in-0:
+          group: q.notify-auth-msg
+        authMessageDLConsumer-in-0:
+          group: dlq.notify-auth-msg
+        authMessagePLConsumer-in-0:
+          group: plq.notify-auth-msg
+
+        authMessageSupplier-out-0:
+          destination: ex.notify-auth-msg
+        authMessageDLSupplier-out-0:
+          destination: dlex.notify-auth-msg
+        authMessagePLSupplier-out-0:
+          destination: plex.notify-auth-msg
+
+        dealCreateConsumer-in-0:
+          group: q.deal.create
+
+openapi:
+  title: notify-mcs
+  description:
+
+application:
+  stream:
+    configuration:
+      max-retries-count: 3
+      dlq-sleep: 60000
+  urls:
+    action-url: http://localhost:8083
+    verify-email-url: https://flat-renta.test.madela.dev/renta/verify-email?key=
+    update-password-url: https://flat-renta.test.madela.dev/renta/update-password?key=
+    account-recovery-url: https://flat-renta.test.madela.dev/renta/account-recovery?key=
+  mail:
+    subject: Flat-renta notification
+    host: mail.hosting.reg.ru
+    port: 587
+    username: flat-renta.test@madela.dev
+    password: uU0sC0pH6g
+    properties.mail:
+      transport.protocol: smtp
+      smtp:
+        auth: true
+        debug: true
+        starttls.enable: true
+
+keycloak:
+  credentials:
+    secret: test
+  resource: notify-service
+  url:
+    token-url: https://flat-renta.test.madela.dev/auth/realms/users-realm/protocol/openid-connect/token
+
+logging:
+  level:
+    root: info
+    org.springframework.web.HttpLogging: info

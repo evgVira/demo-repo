@@ -1,0 +1,74 @@
+{
+  "exchanges": [
+    {
+      "name": "ex.deal",
+      "vhost": "/",
+      "type": "direct",
+      "durable": true,
+      "auto_delete": false,
+      "internal": false,
+      "arguments": {}
+    }
+  ],
+
+
+
+  "queues": [
+    {
+      "name": "q.deal.create",
+      "vhost": "/",
+      "durable": true,
+      "auto_delete": false,
+      "arguments": {
+        "x-queue-type": "stream"
+      }
+    },
+    {
+      "name": "q.deal.update",
+      "vhost": "/",
+      "durable": true,
+      "auto_delete": false,
+      "arguments": {
+        "x-queue-type": "stream"
+      }
+    },
+    {
+      "name": "q.deal.change-status",
+      "vhost": "/",
+      "durable": true,
+      "auto_delete": false,
+      "arguments": {
+        "x-queue-type": "stream"
+      }
+    }
+  ],
+
+
+
+  "bindings": [
+    {
+      "source": "ex.deal",
+      "vhost": "/",
+      "destination": "q.deal.create",
+      "destination_type": "queue",
+      "routing_key": "create",
+      "arguments": {}
+    },
+    {
+      "source": "ex.deal",
+      "vhost": "/",
+      "destination": "q.deal.update",
+      "destination_type": "queue",
+      "routing_key": "update",
+      "arguments": {}
+    },
+    {
+      "source": "ex.deal",
+      "vhost": "/",
+      "destination": "q.deal.change-status",
+      "destination_type": "queue",
+      "routing_key": "change-status",
+      "arguments": {}
+    }
+  ]
+}

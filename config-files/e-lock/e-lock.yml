@@ -1,0 +1,39 @@
+server:
+  port: ${APP_PORT:8086}
+  servlet:
+    context-path: "/api-gateway/e-lock-service"
+
+openapi:
+  title: e-lock-mcs
+  description: Документация e-lock-mcs API
+
+spring:
+  datasource:
+    url: jdbc:postgresql://127.0.0.1:5439/e_lock
+    username: postgres
+    password: 123
+    driverClassName: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    show-sql: false
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+  flyway:
+    enabled: true
+    baseline-on-migrate: true
+    user: postgres
+    password: 123
+    url: jdbc:postgresql://127.0.0.1:5439/e_lock
+    locations: classpath:db/migration
+
+application:
+  url:
+    flat:
+      base-url: http://localhost:8083/flat-service
+
+logging:
+  level:
+    root: debug
+    org.springframework.web.HttpLogging: TRACE
+  pattern:
+    console: "[%d{yyyy-MM-dd HH:mm:ss.SSS}] [%-5level] [%logger{36}] - %msg%n"

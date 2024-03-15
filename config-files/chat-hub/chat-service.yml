@@ -1,0 +1,44 @@
+server:
+  port: ${APP_PORT:8089}
+  servlet:
+    context-path: "/chat-hub-service"
+
+openapi:
+  title: chat-hub-mks
+  description: Документация chat-hub-mks API
+
+spring:
+  datasource:
+    username: ${DB_USER:chat}
+    password: ${DB_PASSWORD:chat}
+    url: ${DB_URL:jdbc:postgresql://127.0.0.38:5432/chat_db}
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    databasePlatform: org.hibernate.dialect.PostgreSQLDialect
+    show-sql: false
+    hibernate:
+      ddl-auto: validate
+
+  flyway:
+    baseline-on-migrate: true
+    enabled: true
+    default-schema: public
+    baseline-version: 0
+
+    logging:
+      level:
+        root: INFO
+      pattern:
+        console: "[%d{yyyy-MM-dd HH:mm:ss.SSS}] [%-5level] [%logger{36}] - %msg%n"
+
+application:
+  url:
+    user-client:
+      base-url: https://flat-renta.test.madela.dev/api-gateway/users
+
+keycloak:
+  credentials:
+    secret: SGAIly7OQ1PcrJEsjsM5Qd0riUV0mtgz
+  resource: chat-hub-service
+  url:
+    token-url: https://flat-renta.test.madela.dev/auth/realms/users-realm/protocol/openid-connect/token

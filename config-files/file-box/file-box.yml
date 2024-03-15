@@ -1,0 +1,18 @@
+spring:
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: https://flat-renta.test.madela.dev/auth/realms/users-realm
+          jwk-set-uri: https://flat-renta.test.madela.dev/auth/realms/users-realm/protocol/openid-connect/certs
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 10MB
+
+keycloak:
+  credentials:
+    secret: Ardut7TW9onY1TapblJdryrakgHe11Rc
+  resource: file-box-client
+  url:
+    token-url: https://flat-renta.test.madela.dev/auth/realms/users-realm/protocol/openid-connect/token

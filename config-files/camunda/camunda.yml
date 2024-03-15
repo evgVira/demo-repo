@@ -1,0 +1,62 @@
+server:
+  port: ${APP_PORT:8088}
+  servlet:
+    context-path: "/camunda"
+
+openapi:
+  title: camunda-mcs
+  description: Документация camunda-mcs API
+
+application:
+  camunda:
+    key: booking-process
+  url:
+    deal:
+      #      base-url: https://flat-renta.test.madela.dev/api-gateway/deal-service
+      base-url: https://flat-renta.test.madela.dev/api-gateway/deal-service
+    flat:
+      base-url: https://flat-renta.test.madela.dev/api-gateway/flat-service
+  webclient:
+    timeout: 1000
+
+    logging:
+      level:
+        root: INFO
+      pattern:
+        console: "[%d{yyyy-MM-dd HH:mm:ss.SSS}] [%-5level] [%logger{36}] - %msg%n"
+
+camunda:
+  bpm:
+    generic-properties:
+      properties:
+        historyTimeToLive: P100D
+    admin-user:
+      id: demo
+      first-name: demo
+      password: demo
+    database:
+      type: postgres
+
+spring:
+  main:
+    allow-bean-definition-overriding: true
+  datasource:
+    username: ${DB_USER:camunda}
+    password: ${DB_PASSWORD:camunda}
+    url: ${DB_URL:jdbc:postgresql://127.0.0.44:5432/camunda}
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    databasePlatform: org.hibernate.dialect.PostgreSQLDialect
+    show-sql: false
+    hibernate:
+      ddl-auto: validate
+
+logging:
+  level:
+    root: debug
+    org.springframework.web.HttpLogging: TRACE
+  pattern:
+    console: "[%d{yyyy-MM-dd HH:mm:ss.SSS}] [%-5level] [%logger{36}] - %msg%n"
+
+

@@ -1,0 +1,41 @@
+spring:
+  datasource:
+    username: ${DB_USER:camunda}
+    password: ${DB_PASSWORD:camunda}
+    url: ${DB_URL:jdbc:postgresql://127.0.0.44:5432/camunda}
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    databasePlatform: org.hibernate.dialect.PostgreSQLDialect
+    show-sql: true
+    hibernate:
+      ddl-auto: validate
+
+keycloak:
+  credentials:
+    secret: soAhQnGQfsaj79rbeOegLk2aRwfnSpua
+  resource: camunda-service
+  url:
+    token-url: https://flat-renta.test.madela.dev/auth/realms/users-realm/protocol/openid-connect/token
+
+
+#!!!!!!!!!!!!!
+application:
+  camunda:
+    key: booking-process
+  url:
+    deal:
+      #      base-url: https://flat-renta.test.madela.dev/api-gateway/deal-service
+      base-url: https://flat-renta.test.madela.dev/api-gateway/deal-service
+    flat:
+      base-url: https://flat-renta.test.madela.dev/api-gateway/flat-service
+
+server:
+  port: ${APP_PORT:8088}
+  servlet:
+    context-path: "/camunda"
+
+openapi:
+  title: camunda-mcs
+  description: Документация camunda-mcs API
+#!!!!!!!!!!!!!!!!
